@@ -3,8 +3,7 @@ from django.shortcuts import render
 import googlemaps
 import os
 
-GOOGLE_API_KEY = "AIzaSyCC8CkQ5cSJqeGljGyaDq-oUvAn2-au3nM"  # or hardcode temporarily
-
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 
 
