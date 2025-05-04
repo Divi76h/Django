@@ -22,5 +22,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("", views.index),
     path("js/", views.js, name="js"),
-    path("raw", views.raw, name="raw"),
+    path("py/", views.py, name="raw"),
+    path("autocomplete/", views.autocomplete_address, name="autocomplete")
 ]

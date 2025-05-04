@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Address Autocomplete</title>
+</head>
+<body>
+  <h1>Autocomplete with Python Backend</h1>
+  <input type="text" id="address" placeholder="Start typing an address..." autocomplete="off">
+  <ul id="suggestions"></ul>
+
+  <script>
+    const input = document.getElementById('address');
+    const suggestionsList = document.getElementById('suggestions');
+
+    input.addEventListener('input', async () => {
+      const query = input.value;
+
+      if (!query) {
+        suggestionsList.innerHTML = '';
+        return;
+      }
+
+      try {
+        const response = await fetch(`/autocomplete/?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+
+        suggestionsList.innerHTML = '';
+        (data.suggestions || []).forEach(item => {
+          const li = document.createElement('li');
+          li.textContent = item;
+          suggestionsList.appendChild(li);
+        });
+      } catch (err) {
+        suggestionsList.innerHTML = '<li>Error fetching suggestions</li>';
+      }
+    });
+  </script>
+</body>
+</html>
