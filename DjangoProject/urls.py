@@ -20,8 +20,6 @@ from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", views.index),
-    path("js/", views.js, name="js"),
-    path("py/", views.py, name="raw"),
+    path("", views.autocomplete, name="home"),
     path("autocomplete/", views.autocomplete_address, name="autocomplete")
 ]

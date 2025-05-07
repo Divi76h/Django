@@ -12,16 +12,8 @@ load_dotenv()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 
-
-def index(request):
-    return render(request, "index.html")
-
-
-def js(request):
-    return render(request, "auto-js.html")
-
-def py(request):
-    return render(request, "auto-py.html")
+def autocomplete(request):
+    return render(request, "autocomplete.html")
 
 @require_GET
 def autocomplete_address(request):
