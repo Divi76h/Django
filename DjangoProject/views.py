@@ -15,6 +15,9 @@ gmaps = googlemaps.Client(key=GOOGLE_API_KEY)
 def autocomplete(request):
     return render(request, "autocomplete.html")
 
+def test(request):
+    return render(request, "test.html")
+
 @require_GET
 def autocomplete_address(request):
     query = request.GET.get('query', '')
