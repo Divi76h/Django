@@ -1,12 +1,49 @@
 {% extends 'layout.html' %}
 {% block title %}Saved Addresses{% endblock %}
+
 {% block content %}
   <h1>Your Claimed Addresses</h1>
-  <ul>
+
+  <ul id="claimed-list">
     {% for address in addresses %}
-      <li>{{ address.address }} (claimed {{ address.claimed_at|date:"Y-m-d H:i" }})</li>
+      <li data-id="{{ address.id }}">
+        {{ address.address }}
+        <button onclick="removeClaim({{ address.id }})" style="margin-left: 10px;">Remove</button>
+      </li>
     {% empty %}
       <li>You haven't claimed any addresses yet.</li>
     {% endfor %}
   </ul>
+
+  <script>
+    async function removeClaim(id) {
+      const response = await fetch(`/ClaimedAddress/unclaim/${id}/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': getCSRFToken()
+        }
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        const li = document.querySelector(`li[data-id='${id}']`);
+        li.remove();
+      } else {
+        alert(result.error || 'Failed to remove.');
+      }
+    }
+
+    function getCSRFToken() {
+      const name = 'csrftoken';
+      const cookies = document.cookie.split(';');
+      for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name + '=')) {
+          return decodeURIComponent(cookie.substring(name.length + 1));
+        }
+      }
+      return '';
+    }
+  </script>
 {% endblock %}
