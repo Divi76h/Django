@@ -24,5 +24,6 @@ urlpatterns = [
     path("", views.autocomplete, name="home"),
     path("autocomplete/", views.autocomplete_address, name="autocomplete"),
     path("test/", views.test, name="test"),
-    path("users/", include("users.urls"))
+    path("users/", include("users.urls")),
+    path("ClaimedAddress/", include("ClaimedAddress.urls"))
 ]

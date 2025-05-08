@@ -1,0 +1,12 @@
+{% extends 'layout.html' %}
+{% block title %}Saved Addresses{% endblock %}
+{% block content %}
+  <h1>Your Claimed Addresses</h1>
+  <ul>
+    {% for address in addresses %}
+      <li>{{ address.address }} (claimed {{ address.claimed_at|date:"Y-m-d H:i" }})</li>
+    {% empty %}
+      <li>You haven't claimed any addresses yet.</li>
+    {% endfor %}
+  </ul>
+{% endblock %}

@@ -3,35 +3,55 @@
 {% block title %}Address Autocomplete{% endblock %}
 
 {% block content %}
-  <h1>Autocomplete Address using Google's Places API</h1>
-  <input type="text" id="address" placeholder="Start typing an address..." autocomplete="off">
-  <ul id="suggestions"></ul>
+    <h1>Autocomplete Address using Google's Places API</h1>
+    <input type="text" id="address" placeholder="Start typing an address..." autocomplete="off">
+    <ul id="suggestions"></ul>
 
-  <script>
-    const input = document.getElementById('address');
-    const suggestionsList = document.getElementById('suggestions');
+    <script>
+        const input = document.getElementById('address');
+        const suggestionsList = document.getElementById('suggestions');
 
-    input.addEventListener('input', async () => {
-      const query = input.value;
+        input.addEventListener('input', async () => {
+            const query = input.value;
 
-      if (!query) {
-        suggestionsList.innerHTML = '';
-        return;
-      }
+            if (!query) {
+                suggestionsList.innerHTML = '';
+                return;
+            }
 
-      try {
-        const response = await fetch(`/autocomplete/?query=${encodeURIComponent(query)}`);
-        const data = await response.json();
+            try {
+                const response = await fetch(`/autocomplete/?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
 
-        suggestionsList.innerHTML = '';
-        (data.suggestions || []).forEach(item => {
-          const li = document.createElement('li');
-          li.textContent = item;
-          suggestionsList.appendChild(li);
+                suggestionsList.innerHTML = '';
+                (data.suggestions || []).forEach(item => {
+                    const li = document.createElement('li');
+                    const text = document.createElement('span');
+                    text.textContent = item;
+
+                    const button = document.createElement('button');
+                    button.textContent = 'Claim';
+                    button.style.marginLeft = '10px';
+                    button.onclick = async () => {
+                        const response = await fetch('/ClaimedAddress/claim/', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({address: item}),
+                        });
+
+                        const result = await response.json();
+                        alert(result.message || 'Claimed!');
+                    };
+
+                    li.appendChild(text);
+                    li.appendChild(button);
+                    suggestionsList.appendChild(li);
+                });
+            } catch (err) {
+                suggestionsList.innerHTML = '<li>Error fetching suggestions</li>';
+            }
         });
-      } catch (err) {
-        suggestionsList.innerHTML = '<li>Error fetching suggestions</li>';
-      }
-    });
-  </script>
+    </script>
 {% endblock %}
