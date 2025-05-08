@@ -32,3 +32,36 @@ h1 {
 .container {
     padding: 30px;
 }
+
+
+
+.errorlist {
+    color: #F00;
+    margin-left: 2rem;
+}
+
+.errorlist li::marker {
+    content: '🚨 ';
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-button:hover {
+    color: #1abc9c;
+}
+
+.logout-form {
+    display: inline;
+    margin: 0;
+    padding: 0;
+}

@@ -5,23 +5,64 @@
     <meta charset="UTF-8">
     <title>{% block title %}My App{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        .user-icon {
+            position: relative;
+            font-size: 20px;
+            cursor: default;
+        }
+
+        .user-icon:hover::after {
+            content: "Logged in as: {{ user.username }}" {% if not user.is_authenticated %}"Not logged in" {% endif %};
+            position: absolute;
+            top: 125%;
+            right: 0;
+            background: #333;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+            font-size: 14px;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-left">
             <a href="{% url 'home' %}">Home</a>
             {% if user.is_authenticated %}
-                <a href="{% url 'my_claims' %}">My Addresses</a>
-                <a href="{% url 'logout' %}">Logout</a>
+{#                <a href="{% url 'saved addresses' %}">My Addresses</a>#}
             {% else %}
-{#                <a href="{% url 'login' %}">Login</a>#}
+                <a href="{% url 'users:register' %}">Register</a>
+                <a href="{% url 'users:login' %}">Login</a>
             {% endif %}
+        </div>
+
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <form class="logout-form" action="{% url 'users:logout' %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="nav-button">Logout</button>
+                </form>
+            {% endif %}
+            <div class="user-icon" title="{% if user.is_authenticated %}Logged in as {{ user.username }}{% else %}Not logged in{% endif %}">
+                {% if user.is_authenticated %}
+                    👤
+                {% else %}
+                    🚫
+                {% endif %}
+            </div>
         </div>
     </nav>
 
     <div class="container">
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </div>
 </body>
 </html>
