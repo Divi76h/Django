@@ -4,16 +4,38 @@
 {% block content %}
   <h1>Your Claimed Addresses</h1>
 
-  <ul id="claimed-list">
-    {% for address in addresses %}
-      <li data-id="{{ address.id }}">
-        {{ address.address }}
-        <button onclick="removeClaim({{ address.id }})" style="margin-left: 10px;">Remove</button>
-      </li>
-    {% empty %}
-      <li>You haven't claimed any addresses yet.</li>
-    {% endfor %}
-  </ul>
+  <table style="width:100%; border-collapse: collapse;">
+    <thead>
+      <tr>
+        <th style="text-align: left; padding: 8px;">Address</th>
+        <th style="text-align: left; padding: 8px;">Map</th>
+        <th style="text-align: left; padding: 8px;">Action</th>
+      </tr>
+    </thead>
+    <tbody id="claimed-list">
+      {% for address in addresses %}
+        <tr data-id="{{ address.id }}" style="border-top: 1px solid #ddd;">
+          <td style="padding: 8px;">{{ address.address }}</td>
+          <td style="padding: 8px;">
+            <iframe
+              width="250"
+              height="150"
+              style="border:0"
+              src="https://www.google.com/maps?q={{ address.address|urlencode }}&output=embed"
+              allowfullscreen>
+            </iframe>
+          </td>
+          <td style="padding: 8px;">
+            <button onclick="removeClaim({{ address.id }})">Remove</button>
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">You haven't claimed any addresses yet.</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
   <script>
     async function removeClaim(id) {
@@ -27,8 +49,8 @@
 
       const result = await response.json();
       if (result.success) {
-        const li = document.querySelector(`li[data-id='${id}']`);
-        li.remove();
+        const row = document.querySelector(`tr[data-id='${id}']`);
+        row.remove();
       } else {
         alert(result.error || 'Failed to remove.');
       }
